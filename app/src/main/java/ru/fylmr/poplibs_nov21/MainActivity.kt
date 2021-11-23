@@ -10,15 +10,45 @@ class MainActivity : AppCompatActivity() {
     private val binding
         get() = _binding!!
 
+    private val counters = mutableListOf(0, 0, 0)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         _binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        binding.btnCounter1.setOnClickListener {
+            binding.btnCounter1.text = (++counters[0]).toString()
+        }
+        binding.btnCounter2.setOnClickListener {
+            binding.btnCounter2.text = (++counters[1]).toString()
+        }
+        binding.btnCounter3.setOnClickListener {
+            binding.btnCounter3.text = (++counters[2]).toString()
+        }
+
+        initViews()
     }
 
-    override fun onStart() {
-        super.onStart()
+    private fun initViews() {
+        binding.btnCounter1.text = counters[0].toString()
+        binding.btnCounter2.text = counters[1].toString()
+        binding.btnCounter3.text = counters[2].toString()
+    }
 
-        binding.helloWorldTextView.text = getString(R.string.app_name)
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+
+        outState.putIntArray("counters", counters.toIntArray())
+    }
+
+    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
+        super.onRestoreInstanceState(savedInstanceState)
+
+        val countersArray = savedInstanceState.getIntArray("counters") ?: return
+        counters.clear()
+        counters.addAll(countersArray.toList())
+
+        initViews()
     }
 }
