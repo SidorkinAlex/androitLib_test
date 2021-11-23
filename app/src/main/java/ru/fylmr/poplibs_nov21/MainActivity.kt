@@ -1,54 +1,36 @@
 package ru.fylmr.poplibs_nov21
 
 import android.os.Bundle
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import ru.fylmr.poplibs_nov21.databinding.ActivityMainBinding
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), MainView {
 
     private var _binding: ActivityMainBinding? = null
     private val binding
         get() = _binding!!
 
-    private val counters = mutableListOf(0, 0, 0)
+    private val presenter = MainPresenter(this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         _binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        binding.btnCounter1.setOnClickListener {
-            binding.btnCounter1.text = (++counters[0]).toString()
-        }
-        binding.btnCounter2.setOnClickListener {
-            binding.btnCounter2.text = (++counters[1]).toString()
-        }
-        binding.btnCounter3.setOnClickListener {
-            binding.btnCounter3.text = (++counters[2]).toString()
+        val listener = View.OnClickListener { view ->
+            presenter.counterClick(view.id)
         }
 
-        initViews()
+        binding.btnCounter1.setOnClickListener(listener)
+        binding.btnCounter2.setOnClickListener(listener)
+        binding.btnCounter3.setOnClickListener(listener)
     }
 
-    private fun initViews() {
-        binding.btnCounter1.text = counters[0].toString()
-        binding.btnCounter2.text = counters[1].toString()
-        binding.btnCounter3.text = counters[2].toString()
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-
-        outState.putIntArray("counters", counters.toIntArray())
-    }
-
-    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
-        super.onRestoreInstanceState(savedInstanceState)
-
-        val countersArray = savedInstanceState.getIntArray("counters") ?: return
-        counters.clear()
-        counters.addAll(countersArray.toList())
-
-        initViews()
+    override fun setButtonText(index: Int, text: String) = when (index) {
+        0 -> binding.btnCounter1.text = text
+        1 -> binding.btnCounter2.text = text
+        2 -> binding.btnCounter3.text = text
+        else -> error("Неверный индекс")
     }
 }
