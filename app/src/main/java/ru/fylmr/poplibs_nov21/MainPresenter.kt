@@ -8,20 +8,16 @@ class MainPresenter(
 
     private val model = CountersModel()
 
-    fun counterClick(@IdRes id: Int) { // todo Архитектурная ошибка
-        when (id) {
-            R.id.btn_counter1 -> {
-                val nextValue = model.increment(0)
-                view.setButtonText(0, nextValue.toString())
-            }
-            R.id.btn_counter2 -> {
-                val nextValue = model.increment(1)
-                view.setButtonText(1, nextValue.toString())
-            }
-            R.id.btn_counter3 -> {
-                val nextValue = model.increment(2)
-                view.setButtonText(2, nextValue.toString())
-            }
-        }
+    fun counter1Click() {
+            val nextValue = model.increment1()
+            view.setButton1Text(nextValue.toString())
+    }
+    fun counter2Click() {
+        val nextValue = model.increment2()
+        view.setButton2Text(nextValue.toString())
+    }
+    fun counter3Click() {
+        val nextValue = model.increment3()
+        view.setButton3Text(nextValue.toString())
     }
 }
